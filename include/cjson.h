@@ -14,6 +14,27 @@ typedef enum
 
 } NodeType;
 
+#define JSON_AddFalseToObject(object, name) \
+    JSON_AddNodeToObject(object, name, JSON_CreateFalse())
+
+#define JSON_AddTrueToObject(object, name) \
+    JSON_AddNodeToObject(object, name, JSON_CreateTrue())
+
+#define JSON_AddNullToObject(object, name) \  
+    JSON_AddNodeToObject(object, name, JSON_CreateNull())
+
+#define JSON_AddNumberToObject(object, name) \
+    JSON_AddNodeToObject(object, name, JSON_CreateNumber())
+
+#define JSON_AddStringToObject(object, name) \
+    JSON_AddNodeToObject(object, name, JSON_CreateString())
+
+#define JSON_SetIntValue(object, value) \
+    (object) ? (object)->valueInt = (object)->valueDouble = (value) : (value)
+
+#define JSON_SetIntValue(object, value) \
+    (object) ? (object)->valueInt = (object)->valueDouble = (value) : (value)
+
 typedef struct jsonNode
 {
     // the key of of this node
@@ -104,5 +125,30 @@ jsonNode *JSON_CreateFalse(void);
  * @return  jsonBoll type jsonNode pointer   */
 jsonNode *JSON_CreateTrue(void);
 
-word
+/**
+ * @brief  create a  bool type jsonNode
+ * @param int bool 1 or 0
+ * @return  jsonBoll type jsonNode pointer   */
+jsonNode *JSON_CreateNull(void);
+
+/**
+ * @brief add a child node to parent object type node
+ * @param parent node pointer
+ * @param string node name
+ * @param child  node pointer
+ * @return 0 for success or -1 for fail
+ * if parent jsonNode is not an empty Node, attach the child to its node linklist
+ */
+int JSON_AddNodeToObject(jsonNode *parent, char *string, jsonNode *child);
+
+/**
+ * @brief
+ * @param array
+ * @param item
+ * @return
+ */
+int JSON_AddNodeToArray(jsonNode *array, jsonNode *item);
+
+// set attr get attr
+
 #endif
