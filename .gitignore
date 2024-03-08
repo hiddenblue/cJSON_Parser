@@ -1,0 +1,8 @@
+*/*.out
+*/*.o
+.vscode
+.vscode/*
+entry.json
+include/practice.h
+
+build/practice.c
