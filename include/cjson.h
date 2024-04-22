@@ -4,7 +4,7 @@
 
 typedef enum
 {
-    JOSN_False = 0,
+    JSON_False = 0,
     JSON_True = 1,
     JSON_NULL = 2,
     JSON_Number = 3,
@@ -38,7 +38,7 @@ typedef enum
 typedef struct jsonNode
 {
     // the key of of this node
-    char *Key;
+    char *key;
 
     // dual chain linklist node pointer;
     struct jsonNode *prev, *next;
@@ -62,7 +62,7 @@ typedef struct jsonNode
  * @param target A string could be parser by json
  * @return A pointer to the root the jsonNode
  */
-jsonNode *JSON_Parser(const char *node);
+jsonNode *JSON_Parse(const char *node);
 
 /**
  * @brief convert a jsonNode type node to printable string
@@ -150,5 +150,15 @@ int JSON_AddNodeToObject(jsonNode *parent, char *string, jsonNode *child);
 int JSON_AddNodeToArray(jsonNode *array, jsonNode *item);
 
 // set attr get attr
+
+jsonNode *JSON_ParseWithOpts(const char *node, const char **return_parse_end, int required_null_terminated);
+
+jsonNode *JSON_New_Item();
+const char *parse_string(jsonNode *node, const char *string);
+const char *parse_number(jsonNode *node, const char *string);
+const char *parser_array(jsonNode *node, const char *string);
+const char *parser_object(jsonNode *node, const char *stirng);
+
+const char *skipWhiteSpace(const char *input);
 
 #endif
