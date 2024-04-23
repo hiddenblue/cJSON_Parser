@@ -161,4 +161,16 @@ const char *parser_object(jsonNode *node, const char *stirng);
 
 const char *skipWhiteSpace(const char *input);
 
+char *print_value(jsonNode *node, int depth, int fmt);
+
+char *JSON_StrDup(const char *string);
+
+print_string();
+
+char *print_number(jsonNode *node);
+
+print_array();
+
+print_object();
+
 #endif

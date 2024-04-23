@@ -5,6 +5,7 @@
 #include "errorPrint.h"
 #include <string.h>
 #include <math.h>
+#include <limits.h>
 
 int main(int argc, char *argv[])
 {
@@ -415,10 +416,105 @@ int JSON_Delete(jsonNode *node)
 
         if (node->key)
         {
-            JSON_free(node->key)
+            JSON_free(node->key);
         }
         JSON_free(node);
         // 释放掉节点中的内容之后，释放掉节点本身
         node = next;
     }
 }
+
+/*
+typedef enum
+{
+    JSON_False = 0,
+    JSON_True = 1,
+    JSON_NULL = 2,
+    JSON_Number = 3,
+    JSON_String = 4,
+    JSON_Array = 5,
+    JSON_Object = 6
+
+} NodeType;
+ */
+
+char *JSON_Print(jsonNode *node)
+{
+    return print_value(node, 0, 1);
+}
+
+char *print_value(jsonNode *node, int depth, int fmt)
+{
+    char *out;
+
+    if (!node)
+        return NULL;
+
+    switch (node->type)
+    {
+    case JSON_False:
+        out = JSON_StrDup("false");
+        break;
+        break;
+
+    case JSON_True:
+        out = JSON_StrDup("true");
+        break;
+        break;
+
+    case JSON_NULL:
+        out = JSON_StrDup("null");
+        break;
+
+    case JSON_Number:
+        break;
+    case JSON_String:
+        break;
+    case JSON_Array:
+        break;
+    case JSON_Object:
+        break;
+    default:
+        break;
+    }
+}
+
+char *JSON_StrDup(const char *string)
+{
+    char *copy = NULL;
+    size_t len = strlen(string);
+
+    copy = JSON_malloc(len + 1);
+    if (!copy)
+        return NULL;
+
+    // 这里为什么不用strcpy或者strncpy呢？
+    memcpy(copy, string, len + 1);
+
+    return copy;
+}
+
+char *print_number(jsonNode *node)
+{
+    char *str = NULL;
+    double number = node->valueDouble;
+
+    if (number == 0)
+    {
+        str = (char *)JSON_malloc(2);
+        if (str)
+            strcpy(str, "0");
+    }
+
+    // 减去之后，得到了精度之外的部分
+    // DBL_EPSILON代表一个很小的数字, 近似相等了。
+    else if (fabs((double)node->valueInt - number) <= __DBL_EPSILON__ && number <= INT_MAX && number >= INT_MIN)
+    {
+        /* 2^64 */
+        str = (char *)JSON_malloc(21);
+        if (str)
+            sprintf(str, "%d", node->valueInt);
+    }
+}
+
+print_string()
