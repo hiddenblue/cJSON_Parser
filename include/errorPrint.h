@@ -21,7 +21,7 @@
     fprintf(stderr, "exiting");                                                                                              \
     EXIT(EXIT_FAILURE);
 
-void DieWithUserMessage(const char *msg);
+void DieWithUserMessage(const char *msg, const char *detail);
 
 void DieWithSystemMessage(const char *msg);
 

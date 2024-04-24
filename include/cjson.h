@@ -2,15 +2,17 @@
 #ifndef __CJSON_H
 #define __CJSON_H
 
+// NodeType 如果从0开始，好像会和默认的NULL 等于(void *)0有点冲突
+// 默认就变成了NULL类型节点，所以从1开始可能更好一点
 typedef enum
 {
-    JSON_False = 0,
-    JSON_True = 1,
-    JSON_NULL = 2,
-    JSON_Number = 3,
-    JSON_String = 4,
-    JSON_Array = 5,
-    JSON_Object = 6
+    JSON_False = 1,
+    JSON_True = 2,
+    JSON_NULL = 3,
+    JSON_Number = 4,
+    JSON_String = 5,
+    JSON_Array = 6,
+    JSON_Object = 7
 
 } NodeType;
 
@@ -154,9 +156,44 @@ int JSON_AddNodeToArray(jsonNode *array, jsonNode *item);
 jsonNode *JSON_ParseWithOpts(const char *node, const char **return_parse_end, int required_null_terminated);
 
 jsonNode *JSON_New_Item();
+const char *parse_Node(jsonNode *node, const char *value);
+/**
+ * @brief 可以对json中各种""中的字符进行解析，放在传入的node的valueString当中
+ * 默认修改type为JSON_String类型
+ * @param node
+ * @param string
+ * @return 返回最后成功解析的位置
+ */
 const char *parse_string(jsonNode *node, const char *string);
+/**
+ * @brief 对parse_node当中遇到的数字进行处理，默认将数字存储在valueDouble节点当中，int部分存在valueInt当中。
+ * 默认type是JSON_Number类型
+ * @param node
+ * @param string
+ * @return
+ */
 const char *parse_number(jsonNode *node, const char *string);
+
+/*
+ 然后里面调用paser_node对内容进行解析，新配新节点，然后储存遇到的字符。
+ 遇到,逗号会一直重复解析，分配新节点
+
+*/
+
+/**
+ * @brief 对parse_node当中的array进行处理，默认修改传入node的type为JSON_Array
+
+ * @param node
+ * @param string
+ * @return 返回最后成功解析的位置，默认就是] 后面一个位置
+ */
 const char *parser_array(jsonNode *node, const char *string);
+/**
+ * @brief 对位于:后面的{或者最开始的{内容进行解析
+ * @param node
+ * @param stirng
+ * @return
+ */
 const char *parser_object(jsonNode *node, const char *stirng);
 
 const char *skipWhiteSpace(const char *input);
@@ -165,12 +202,14 @@ char *print_value(jsonNode *node, int depth, int fmt);
 
 char *JSON_StrDup(const char *string);
 
-print_string();
+char *print_string(jsonNode *node);
 
 char *print_number(jsonNode *node);
 
-print_array();
+char *print_array(jsonNode *node, int depth, int fmt);
 
-print_object();
+char *print_object(jsonNode *node, int depth, int fmt);
+
+char *print_node(jsonNode *node);
 
 #endif
